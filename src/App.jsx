@@ -3,7 +3,12 @@ import { sampleBooks } from './data/sampleBooks';
 import './App.css';
 
 function App() {
-  const [books, setBooks] = useState(sampleBooks);
+  // Lấy dữ liệu từ localStorage hoặc sử dụng dữ liệu mẫu nếu không có
+  const [books, setBooks] = useState(() => {
+    const savedBooks = localStorage.getItem('books');
+    return savedBooks ? JSON.parse(savedBooks) : sampleBooks;
+  });
+  
   const [newBook, setNewBook] = useState({
     title: '',
     author: '',
@@ -20,11 +25,17 @@ function App() {
     setGenres(uniqueGenres);
   }, [books]);
 
+  // Lưu danh sách sách vào localStorage mỗi khi có thay đổi
+  useEffect(() => {
+    localStorage.setItem('books', JSON.stringify(books));
+  }, [books]);
+
   // Hàm xóa sách
   const handleDelete = (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa cuốn sách này?')) {
       const updatedBooks = books.filter(book => book.id !== id);
       setBooks(updatedBooks);
+      // localStorage sẽ được cập nhật tự động nhờ useEffect
     }
   };
 
@@ -57,6 +68,7 @@ function App() {
     };
 
     setBooks([...books, newBookWithId]);
+    // localStorage sẽ được cập nhật tự động nhờ useEffect
 
     setNewBook({
       title: '',
