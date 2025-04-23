@@ -11,10 +11,15 @@ function App() {
     year: ''
   });
 
-  // Hàm xóa sách (sẽ được triển khai ở bước sau)
+  // Hàm xóa sách
   const handleDelete = (id) => {
-    console.log(`Xóa sách có id: ${id}`);
-    // Chức năng xóa sẽ được triển khai ở bước 4
+    // Hiển thị hộp thoại xác nhận trước khi xóa
+    if (window.confirm('Bạn có chắc chắn muốn xóa cuốn sách này?')) {
+      // Lọc ra danh sách mới không bao gồm sách có id trùng khớp
+      const updatedBooks = books.filter(book => book.id !== id);
+      // Cập nhật state với danh sách đã được lọc
+      setBooks(updatedBooks);
+    }
   };
 
   // Hàm xử lý thay đổi input
