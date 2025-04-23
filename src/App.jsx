@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { sampleBooks } from './data/sampleBooks';
 import './App.css';
 
@@ -11,14 +11,19 @@ function App() {
     year: ''
   });
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('');
+  const [genres, setGenres] = useState([]);
+
+  // Trích xuất tất cả các thể loại duy nhất từ danh sách sách
+  useEffect(() => {
+    const uniqueGenres = [...new Set(books.map(book => book.genre))];
+    setGenres(uniqueGenres);
+  }, [books]);
 
   // Hàm xóa sách
   const handleDelete = (id) => {
-    // Hiển thị hộp thoại xác nhận trước khi xóa
     if (window.confirm('Bạn có chắc chắn muốn xóa cuốn sách này?')) {
-      // Lọc ra danh sách mới không bao gồm sách có id trùng khớp
       const updatedBooks = books.filter(book => book.id !== id);
-      // Cập nhật state với danh sách đã được lọc
       setBooks(updatedBooks);
     }
   };
@@ -34,30 +39,25 @@ function App() {
 
   // Hàm thêm sách mới
   const handleAddBook = () => {
-    // Kiểm tra dữ liệu không được để trống
     if (!newBook.title || !newBook.author || !newBook.genre || !newBook.year) {
       alert('Vui lòng nhập đầy đủ thông tin sách!');
       return;
     }
 
-    // Kiểm tra năm là số hợp lệ
     const yearValue = parseInt(newBook.year);
     if (isNaN(yearValue)) {
       alert('Năm phải là số!');
       return;
     }
 
-    // Tạo sách mới với ID là timestamp hiện tại
     const newBookWithId = {
       ...newBook,
       id: Date.now(),
       year: yearValue
     };
 
-    // Thêm sách mới vào danh sách
     setBooks([...books, newBookWithId]);
 
-    // Reset form
     setNewBook({
       title: '',
       author: '',
@@ -71,10 +71,22 @@ function App() {
     setSearchTerm(e.target.value);
   };
 
-  // Lọc sách theo từ khóa tìm kiếm
-  const filteredBooks = books.filter(book => 
-    book.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Hàm xử lý lọc theo thể loại
+  const handleGenreFilter = (e) => {
+    setSelectedGenre(e.target.value);
+  };
+
+  // Lọc sách theo từ khóa tìm kiếm và thể loại
+  const filteredBooks = books.filter(book => {
+    // Lọc theo tên sách (không phân biệt hoa thường)
+    const matchesSearchTerm = book.title.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Lọc theo thể loại (nếu có chọn thể loại)
+    const matchesGenre = selectedGenre === '' || book.genre === selectedGenre;
+    
+    // Trả về true nếu thỏa mãn cả hai điều kiện
+    return matchesSearchTerm && matchesGenre;
+  });
 
   return (
     <div className="container">
@@ -129,14 +141,32 @@ function App() {
         <button className="btn-add" onClick={handleAddBook}>Thêm sách</button>
       </div>
       
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Tìm kiếm theo tên sách..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="search-input"
-        />
+      <div className="filters-container">
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Tìm kiếm theo tên sách..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="search-input"
+          />
+        </div>
+        
+        <div className="genre-filter">
+          <label>Lọc theo thể loại:</label>
+          <select 
+            value={selectedGenre} 
+            onChange={handleGenreFilter}
+            className="genre-select"
+          >
+            <option value="">Tất cả thể loại</option>
+            {genres.map(genre => (
+              <option key={genre} value={genre}>
+                {genre}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       
       <div className="book-table">

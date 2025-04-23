@@ -111,3 +111,45 @@ search-container {
     outline: none;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
+
+
+/* Thêm vào cuối file App.css hiện tại */
+
+.filters-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.search-container {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.genre-filter {
+    flex: 1;
+}
+
+.genre-filter label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.genre-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.genre-select:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
