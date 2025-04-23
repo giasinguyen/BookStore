@@ -10,6 +10,7 @@ function App() {
     genre: '',
     year: ''
   });
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Hàm xóa sách
   const handleDelete = (id) => {
@@ -65,6 +66,16 @@ function App() {
     });
   };
 
+  // Hàm xử lý tìm kiếm theo tên sách
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Lọc sách theo từ khóa tìm kiếm
+  const filteredBooks = books.filter(book => 
+    book.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="container">
       <h1>Quản Lý Sách</h1>
@@ -118,6 +129,16 @@ function App() {
         <button className="btn-add" onClick={handleAddBook}>Thêm sách</button>
       </div>
       
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Tìm kiếm theo tên sách..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="search-input"
+        />
+      </div>
+      
       <div className="book-table">
         <table>
           <thead>
@@ -130,7 +151,7 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
               <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{book.author}</td>
