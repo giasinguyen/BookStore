@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 import { sampleBooks } from './data/sampleBooks';
+import BookForm from './components/Book/BookForm';
+import FilterBar from './components/Book/FilterBar';
+import BookList from './components/Book/BookList';
+import BookStats from './components/Book/BookStats';
 import './App.css';
 
 function App() {
@@ -104,114 +108,29 @@ function App() {
     <div className="container">
       <h1>Quản Lý Sách</h1>
       
-      <div className="form-container">
-        <h2>Thêm Sách Mới</h2>
-        <div className="form-group">
-          <label>Tên sách:</label>
-          <input
-            type="text"
-            name="title"
-            value={newBook.title}
-            onChange={handleInputChange}
-            placeholder="Nhập tên sách"
-          />
-        </div>
-        
-        <div className="form-group">
-          <label>Tác giả:</label>
-          <input
-            type="text"
-            name="author"
-            value={newBook.author}
-            onChange={handleInputChange}
-            placeholder="Nhập tên tác giả"
-          />
-        </div>
-        
-        <div className="form-group">
-          <label>Thể loại:</label>
-          <input
-            type="text"
-            name="genre"
-            value={newBook.genre}
-            onChange={handleInputChange}
-            placeholder="Nhập thể loại"
-          />
-        </div>
-        
-        <div className="form-group">
-          <label>Năm:</label>
-          <input
-            type="text"
-            name="year"
-            value={newBook.year}
-            onChange={handleInputChange}
-            placeholder="Nhập năm xuất bản"
-          />
-        </div>
-        
-        <button className="btn-add" onClick={handleAddBook}>Thêm sách</button>
-      </div>
+      <BookForm 
+        newBook={newBook} 
+        onInputChange={handleInputChange} 
+        onAddBook={handleAddBook} 
+      />
       
-      <div className="filters-container">
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Tìm kiếm theo tên sách..."
-            value={searchTerm}
-            onChange={handleSearch}
-            className="search-input"
-          />
-        </div>
-        
-        <div className="genre-filter">
-          <label>Lọc theo thể loại:</label>
-          <select 
-            value={selectedGenre} 
-            onChange={handleGenreFilter}
-            className="genre-select"
-          >
-            <option value="">Tất cả thể loại</option>
-            {genres.map(genre => (
-              <option key={genre} value={genre}>
-                {genre}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+      <FilterBar 
+        searchTerm={searchTerm} 
+        onSearch={handleSearch} 
+        selectedGenre={selectedGenre} 
+        onGenreFilter={handleGenreFilter} 
+        genres={genres} 
+      />
       
-      <div className="book-stats">
-        <p>Tổng số sách: <strong>{books.length}</strong></p>
-        <p>Hiển thị: <strong>{filteredBooks.length}</strong> sách</p>
-      </div>
+      <BookStats 
+        totalBooks={books.length} 
+        displayedBooks={filteredBooks.length} 
+      />
       
-      <div className="book-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Tên sách</th>
-              <th>Tác giả</th>
-              <th>Thể loại</th>
-              <th>Năm</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredBooks.map((book) => (
-              <tr key={book.id}>
-                <td>{book.title}</td>
-                <td>{book.author}</td>
-                <td>{book.genre}</td>
-                <td>{book.year}</td>
-                <td>
-                  <button onClick={() => handleDelete(book.id)}>Xóa</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <BookList 
+        books={filteredBooks} 
+        onDelete={handleDelete} 
+      />
     </div>
   );
 }
