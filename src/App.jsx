@@ -169,6 +169,11 @@ function App() {
         </div>
       </div>
       
+      <div className="book-stats">
+        <p>Tổng số sách: <strong>{books.length}</strong></p>
+        <p>Hiển thị: <strong>{filteredBooks.length}</strong> sách</p>
+      </div>
+      
       <div className="book-table">
         <table>
           <thead>
