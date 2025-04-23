@@ -4,6 +4,12 @@ import './App.css';
 
 function App() {
   const [books, setBooks] = useState(sampleBooks);
+  const [newBook, setNewBook] = useState({
+    title: '',
+    author: '',
+    genre: '',
+    year: ''
+  });
 
   // Hàm xóa sách (sẽ được triển khai ở bước sau)
   const handleDelete = (id) => {
@@ -11,35 +17,122 @@ function App() {
     // Chức năng xóa sẽ được triển khai ở bước 4
   };
 
+  // Hàm xử lý thay đổi input
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewBook({
+      ...newBook,
+      [name]: value
+    });
+  };
+
+  // Hàm thêm sách mới
+  const handleAddBook = () => {
+    // Kiểm tra dữ liệu không được để trống
+    if (!newBook.title || !newBook.author || !newBook.genre || !newBook.year) {
+      alert('Vui lòng nhập đầy đủ thông tin sách!');
+      return;
+    }
+
+    // Kiểm tra năm là số hợp lệ
+    const yearValue = parseInt(newBook.year);
+    if (isNaN(yearValue)) {
+      alert('Năm phải là số!');
+      return;
+    }
+
+    // Tạo sách mới với ID là timestamp hiện tại
+    const newBookWithId = {
+      ...newBook,
+      id: Date.now(),
+      year: yearValue
+    };
+
+    // Thêm sách mới vào danh sách
+    setBooks([...books, newBookWithId]);
+
+    // Reset form
+    setNewBook({
+      title: '',
+      author: '',
+      genre: '',
+      year: ''
+    });
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Quản Lý Sách</h1>
+    <div className="container">
+      <h1>Quản Lý Sách</h1>
       
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead className="bg-gray-100">
+      <div className="form-container">
+        <h2>Thêm Sách Mới</h2>
+        <div className="form-group">
+          <label>Tên sách:</label>
+          <input
+            type="text"
+            name="title"
+            value={newBook.title}
+            onChange={handleInputChange}
+            placeholder="Nhập tên sách"
+          />
+        </div>
+        
+        <div className="form-group">
+          <label>Tác giả:</label>
+          <input
+            type="text"
+            name="author"
+            value={newBook.author}
+            onChange={handleInputChange}
+            placeholder="Nhập tên tác giả"
+          />
+        </div>
+        
+        <div className="form-group">
+          <label>Thể loại:</label>
+          <input
+            type="text"
+            name="genre"
+            value={newBook.genre}
+            onChange={handleInputChange}
+            placeholder="Nhập thể loại"
+          />
+        </div>
+        
+        <div className="form-group">
+          <label>Năm:</label>
+          <input
+            type="text"
+            name="year"
+            value={newBook.year}
+            onChange={handleInputChange}
+            placeholder="Nhập năm xuất bản"
+          />
+        </div>
+        
+        <button className="btn-add" onClick={handleAddBook}>Thêm sách</button>
+      </div>
+      
+      <div className="book-table">
+        <table>
+          <thead>
             <tr>
-              <th className="py-2 px-4 border-b text-left">Tên sách</th>
-              <th className="py-2 px-4 border-b text-left">Tác giả</th>
-              <th className="py-2 px-4 border-b text-left">Thể loại</th>
-              <th className="py-2 px-4 border-b text-left">Năm</th>
-              <th className="py-2 px-4 border-b text-left">Hành động</th>
+              <th>Tên sách</th>
+              <th>Tác giả</th>
+              <th>Thể loại</th>
+              <th>Năm</th>
+              <th>Hành động</th>
             </tr>
           </thead>
           <tbody>
             {books.map((book) => (
-              <tr key={book.id} className="hover:bg-gray-50">
-                <td className="py-2 px-4 border-b">{book.title}</td>
-                <td className="py-2 px-4 border-b">{book.author}</td>
-                <td className="py-2 px-4 border-b">{book.genre}</td>
-                <td className="py-2 px-4 border-b">{book.year}</td>
-                <td className="py-2 px-4 border-b">
-                  <button 
-                    className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded"
-                    onClick={() => handleDelete(book.id)}
-                  >
-                    Xóa
-                  </button>
+              <tr key={book.id}>
+                <td>{book.title}</td>
+                <td>{book.author}</td>
+                <td>{book.genre}</td>
+                <td>{book.year}</td>
+                <td>
+                  <button onClick={() => handleDelete(book.id)}>Xóa</button>
                 </td>
               </tr>
             ))}
