@@ -12,7 +12,7 @@ function App() {
     const savedBooks = localStorage.getItem('books');
     return savedBooks ? JSON.parse(savedBooks) : sampleBooks;
   });
-  
+
   const [newBook, setNewBook] = useState({
     title: '',
     author: '',
@@ -96,40 +96,42 @@ function App() {
   const filteredBooks = books.filter(book => {
     // Lọc theo tên sách (không phân biệt hoa thường)
     const matchesSearchTerm = book.title.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     // Lọc theo thể loại (nếu có chọn thể loại)
     const matchesGenre = selectedGenre === '' || book.genre === selectedGenre;
-    
+
     // Trả về true nếu thỏa mãn cả hai điều kiện
     return matchesSearchTerm && matchesGenre;
   });
 
   return (
-    <div className="container">
-      <h1>Quản Lý Sách</h1>
-      
-      <BookForm 
-        newBook={newBook} 
-        onInputChange={handleInputChange} 
-        onAddBook={handleAddBook} 
+    <div className="max-w-6xl mx-auto px-4 py-8 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-bold mb-8 text-center text-indigo-700">
+        📚 Quản Lý Sách
+      </h1>
+
+      <BookForm
+        newBook={newBook}
+        onInputChange={handleInputChange}
+        onAddBook={handleAddBook}
       />
-      
-      <FilterBar 
-        searchTerm={searchTerm} 
-        onSearch={handleSearch} 
-        selectedGenre={selectedGenre} 
-        onGenreFilter={handleGenreFilter} 
-        genres={genres} 
+
+      <FilterBar
+        searchTerm={searchTerm}
+        onSearch={handleSearch}
+        selectedGenre={selectedGenre}
+        onGenreFilter={handleGenreFilter}
+        genres={genres}
       />
-      
-      <BookStats 
-        totalBooks={books.length} 
-        displayedBooks={filteredBooks.length} 
+
+      <BookStats
+        totalBooks={books.length}
+        displayedBooks={filteredBooks.length}
       />
-      
-      <BookList 
-        books={filteredBooks} 
-        onDelete={handleDelete} 
+
+      <BookList
+        books={filteredBooks}
+        onDelete={handleDelete}
       />
     </div>
   );
